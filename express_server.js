@@ -18,10 +18,14 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-res.render('views/urls_index', {
-  entry1: entry,
-  entry2: whatever
-})
+// app.render('views/urls_index', {
+//   entry1: entry,
+//   entry2: whatever
+// })
+
+// app.render('views/urls_show', {
+//   hey1: hey
+// })
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -33,10 +37,15 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
-// Empty template
+// Empty template, "/urls" is the router
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
+});
+
+app.get("/urls/:shortURL", (req, res) => {
+  const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL};
+  res.render("urls_show", templateVars);
 });
 
 // using <%= %> will tell EJS that we want the result of the code to show up on the page. Without display desired? remove the =
