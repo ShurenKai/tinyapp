@@ -18,6 +18,11 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+res.render('views/urls_index', {
+  entry1: entry,
+  entry2: whatever
+})
+
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
@@ -33,3 +38,5 @@ app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
+
+// using <%= %> will tell EJS that we want the result of the code to show up on the page. Without display desired? remove the =
