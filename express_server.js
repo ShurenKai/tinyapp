@@ -53,7 +53,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL};
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
   res.render("urls_show", templateVars);
 });
 
@@ -68,7 +68,19 @@ app.post("/urls", (req, res) => {
   let longerURL = req.body.longURL
   let newGenerate = generateRandomString()
   urlDatabase[newGenerate] = longerURL
-  res.send('ok')
+  res.redirect(`/urls/${newGenerate}`)
+});
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+  const id = req.params.shortURL
+  delete urlDatabase[id]
+  res.redirect('/urls')
+})
+
+app.post("/urls/:shortURL", (req, res) => {
+  let longerURL = req.body.longURL
+  urlDatabase[req.params.shortURL] = longerURL
+  res.redirect('/urls')
 });
 
 
@@ -78,3 +90,4 @@ app.post("/urls", (req, res) => {
 // });
 
 // using <%= %> will tell EJS that we want the result of the code to show up on the page. Without display desired? remove the =
+// reditrects need to know exactly where to go, so no :shortURL for instance, use `` instead

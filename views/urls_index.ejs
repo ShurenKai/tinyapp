@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head> 
+  <header> 
     <%- include('partials/_header') %>
-  </head>
+  </header>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -26,6 +26,10 @@
           <tr>
             <td><%= url %></td>
             <td><%= urls[url] %></td>
+            <td><a href="/urls/<%= url %>">Update</a></td>
+            <td><form method="POST" action="/urls/<%= url %>/delete">
+              <button type='submit' type value="delete">DELETE</button>
+            </form></td>
           </tr>
         <% } %>
       </tbody>
