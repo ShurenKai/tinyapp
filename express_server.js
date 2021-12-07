@@ -40,14 +40,13 @@ app.get("/hello", (req, res) => {
 });
 
 // Empty template, "/urls" is the router
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
 
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
-});
-
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
 });
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -55,4 +54,19 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+app.post("/urls", (req, res) => {
+  console.log(req.body);  // Log the POST request body to the console
+  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+});
+
 // using <%= %> will tell EJS that we want the result of the code to show up on the page. Without display desired? remove the =
+
+function generateRandomString() {
+  let options = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let length = 6
+  let short = ''
+  for(let i = 0; i <= length; i++){
+    short += options.charAt(Math.floor(Math.random() * options.length))
+  }
+return short
+}
