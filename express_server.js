@@ -7,6 +7,18 @@ app.use(bodyParser.urlencoded({extended: true}));
 //set engine to ejs
 app.set("view engine", "ejs");
 
+function generateRandomString() {
+  let options = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let length = 6
+  let short = ''
+  for(let i = 0; i <= length; i++){
+    short += options.charAt(Math.floor(Math.random() * options.length))
+  }
+return short
+}
+
+let newGenerate = generateRandomString()
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -19,15 +31,6 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
-// app.render('views/urls_index', {
-//   entry1: entry,
-//   entry2: whatever
-// })
-
-// app.render('views/urls_show', {
-//   hey1: hey
-// })
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -54,19 +57,24 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+app.get("/u/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL
+  const longURL = urlDatabase[shortURL]
+  console.log('this is my ', longURL)
+  res.redirect(longURL);
 });
 
-// using <%= %> will tell EJS that we want the result of the code to show up on the page. Without display desired? remove the =
+app.post("/urls", (req, res) => {
+  let longerURL = req.body.longURL
+  let newGenerate = generateRandomString()
+  urlDatabase[newGenerate] = longerURL
+  res.send('ok')
+});
 
-function generateRandomString() {
-  let options = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  let length = 6
-  let short = ''
-  for(let i = 0; i <= length; i++){
-    short += options.charAt(Math.floor(Math.random() * options.length))
-  }
-return short
-}
+
+// app.post("/urls", (req, res) => {
+// console.log(req.body);  // Log the POST request body to the console
+// res.send("Ok");         // Respond with 'Ok' (we will replace this)
+// });
+
+// using <%= %> will tell EJS that we want the result of the code to show up on the page. Without display desired? remove the =
