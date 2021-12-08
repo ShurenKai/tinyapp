@@ -11,8 +11,8 @@
       </div>
       <div class="navbar-nav ml-auto">
         <div class="nav-item">
-           <% if(user_id){ %>
-          Hello <%= user_id %>
+           <% if(email){ %>
+          Hello <%= email %>
           <form class="form-inline" action="/logout" method="POST">
             <div class="form-group mb-2">
               <button type="submit">LOGOUT</button>
@@ -22,7 +22,7 @@
           <form class="form-inline" action="/login" method="POST">
             <div class="form-group mb-2">
               <input name="email" id="password" placeholder="email">
-              <input type="password" id="password" placeholder="password">
+              <input name="password" type="password" id="password" placeholder="password">
               <button type="submit">Submit</button>
             </div>
           </form>
