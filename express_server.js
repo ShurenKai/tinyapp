@@ -58,6 +58,15 @@ const checkUser = (email, password) => {
   return null
 }
 
+const inUse = (email) => {
+  for(let user in users){
+    if(email === users[user].email){
+      return true
+    }
+  }
+  return false
+}
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -124,6 +133,16 @@ app.get("/register", (req, res) => {
   res.render('user_registration', templateVars);
 });
 
+app.get("/login", (req, res) => {
+  const id = req.cookies.user_id
+  let email;
+  if(id && users[id]){
+    email = users[id].email
+  }
+  const templateVars = {user_id: id, email: email };
+  res.render('login', templateVars);
+});
+
 app.post("/urls", (req, res) => {
   let longerURL = req.body.longURL;
   let newGenerate = generateRandomString();
@@ -147,7 +166,9 @@ app.post("/login", (req, res) =>{
   const inputEmail = req.body.email
   const inputPassword = req.body.password
   const user = checkUser(inputEmail, inputPassword)
-  console.log(user)
+  if(!user){
+    res.send('403 user not found')
+  }
   res.cookie('user_id', user)
   res.redirect('/urls');
 });
@@ -160,6 +181,10 @@ app.post("/logout", (req, res) =>{
 app.post('/register', (req, res) =>{
   const newEmail = req.body.email;
   const newPassword = req.body.password;
+  if(inUse(newEmail)){
+    res.send('400 email already in use')
+    res.end
+  } 
   const id = generateRandomString();
 
   users[id] = {id: id, email: newEmail, password: newPassword};
