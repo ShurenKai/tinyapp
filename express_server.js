@@ -5,8 +5,8 @@ const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
-const { inUse ,urlsForUser } = require('./helpers')
-const methodOverride = require('method-override')
+const { inUse ,urlsForUser } = require('./helpers');
+const methodOverride = require('method-override');
 
 
 // Middleware
@@ -16,7 +16,7 @@ app.use(cookieSession({
   keys: ['9c10ea429bfd', '5588-4f8a']
 }));
 
-app.use(methodOverride('_method')) 
+app.use(methodOverride('_method'));
 
 //set engine to ejs
 app.set("view engine", "ejs");
@@ -29,7 +29,7 @@ const generateRandomString = () => {
     short += options.charAt(Math.floor(Math.random() * options.length));
   }
   return short;
-}
+};
 
 //////////
 // Data //
@@ -112,7 +112,7 @@ app.post("/urls", (req, res) => {
     urlDatabase[newGenerate] = { longURL: longerURL, userID: id };
     res.redirect(`/urls/${newGenerate}`);
   } else {
-    res.send('403 login!');
+    res.sendStatus(403);
   }
 });
 
@@ -139,9 +139,8 @@ app.get("/urls/:shortURL", (req, res) => {
     const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user_id: id, email: email };
     res.render("urls_show", templateVars);
   } else {
-    res.send('401 you do not have access to this page')
+    res.sendStatus(401)
   }
-
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -150,30 +149,30 @@ app.get("/u/:shortURL", (req, res) => {
   if (dataKeys.includes(shortURL)) {
     res.redirect(urlDatabase[shortURL].longURL);
   } else {
-    res.send('404 page not found');
+    res.sendStatus(404);
   }
 });
 
 app.put("/urls/:shortURL", (req, res) => {
   const user = req.session.user_id;
   const id = req.params.shortURL;
-  if (urlDatabase[id].userID == user) {
+  if (urlDatabase[id].userID === user) {
     let longerURL = req.body.longURL;
     urlDatabase[req.params.shortURL].longURL = longerURL;
     res.redirect('/urls');
   } else {
-    res.send('401 you can\'t access this!');
+    res.sendStatus(404);
   }
 });
 
 app.delete("/urls/:shortURL", (req, res) => {
   const user = req.session.user_id;
   const id = req.params.shortURL;
-  if (urlDatabase[id].userID == user) {
+  if (urlDatabase[id].userID === user) {
     delete urlDatabase[id];
     res.redirect('/urls');
   } else {
-    res.send('401 you can\'t delete this');
+    res.sendStatus(401);
   }
 });
 
@@ -194,7 +193,7 @@ app.post('/register', (req, res) =>{
   const newEmail = req.body.email;
   const newPassword = req.body.password;
   if (inUse(newEmail, users)) {
-    res.send('400 email already in use');
+    res.sendStatus(400);
     res.end;
   }
   const id = generateRandomString();
@@ -222,7 +221,7 @@ app.post("/login", (req, res) =>{
   const inputPassword = req.body.password;
   const user = checkUser(inputEmail, inputPassword);
   if (!user) {
-    res.send('403 user not found');
+    res.sendStatus(403);
   }
   req.session['user_id'] = user;
   res.redirect('/urls');
