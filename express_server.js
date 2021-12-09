@@ -6,7 +6,7 @@ const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const { inUse ,urlsForUser } = require('./helpers')
-// const methodOverride = require('method-override')
+const methodOverride = require('method-override')
 
 
 // Middleware
@@ -16,7 +16,7 @@ app.use(cookieSession({
   keys: ['9c10ea429bfd', '5588-4f8a']
 }));
 
-// app.use(methodOverride('X-HTTP-Method-Override')) 
+app.use(methodOverride('_method')) 
 
 //set engine to ejs
 app.set("view engine", "ejs");
@@ -81,11 +81,6 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-// used for testing only
-// app.get("/urls.json", (req, res) => {
-//   res.json(urlDatabase);
-// });
-
 ////////////////////////////////
 // Homepage that does nothing //
 ////////////////////////////////
@@ -99,7 +94,6 @@ app.get("/hello", (req, res) => {
 // Creation of New shortURLS //
 ///////////////////////////////
 
-// Directs to creation page only if user is logged in
 app.get("/urls/new", (req, res) => {
   const id = req.session.user_id;
   let email;
@@ -110,7 +104,6 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
-// Create new shortURL/tinyURL
 app.post("/urls", (req, res) => {
   const id = req.session.user_id;
   if (id) {
@@ -123,7 +116,6 @@ app.post("/urls", (req, res) => {
   }
 });
 
-// Shows the user the index of their own URLs
 app.get("/urls", (req, res) => {
   const id = req.session.user_id;
   const urlsList = urlsForUser(id, urlDatabase);
@@ -162,7 +154,7 @@ app.get("/u/:shortURL", (req, res) => {
   }
 });
 
-app.post("/urls/:shortURL", (req, res) => {
+app.put("/urls/:shortURL", (req, res) => {
   const user = req.session.user_id;
   const id = req.params.shortURL;
   if (urlDatabase[id].userID == user) {
@@ -174,7 +166,7 @@ app.post("/urls/:shortURL", (req, res) => {
   }
 });
 
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.delete("/urls/:shortURL", (req, res) => {
   const user = req.session.user_id;
   const id = req.params.shortURL;
   if (urlDatabase[id].userID == user) {
