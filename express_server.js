@@ -2,14 +2,18 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
-const cookieParser = require('cookie-parser');
-// const cookieSession = require('cookie-session')
+// const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session')
 const bcrypt = require('bcryptjs');
+const salt = bcrypt.genSaltSync(10);
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
-// app.use(cookieSession())
+// app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['9c10ea429bfd', '5588-4f8a']
+}))
 
 
 //set engine to ejs
@@ -103,7 +107,7 @@ app.get("/hello", (req, res) => {
 
 // "/urls" is the router
 app.get("/urls/new", (req, res) => {
-  const id = req.cookies.user_id;
+  const id = req.session.user_id;
   let email;
   if (id && users[id]) {
     email = users[id].email;
@@ -113,7 +117,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const id = req.cookies.user_id;
+  const id = req.session.user_id;
   const urlsList = urlsForUser(id);
   let email;
   if (id && users[id]) {
@@ -124,7 +128,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const id = req.cookies.user_id;
+  const id = req.session.user_id;
   let email;
   if (id && users[id]) {
     email = users[id].email;
@@ -144,7 +148,7 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  const id = req.cookies.user_id;
+  const id = req.session.user_id;
   let email;
   if (id && users[id]) {
     email = users[id].email;
@@ -154,7 +158,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  const id = req.cookies.user_id;
+  const id = req.session.user_id;
   let email;
   if (id && users[id]) {
     email = users[id].email;
@@ -164,7 +168,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  const id = req.cookies.user_id;
+  const id = req.session.user_id;
   if (id) {
     let longerURL = req.body.longURL;
     let newGenerate = generateRandomString();
@@ -176,7 +180,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  const user = req.cookies.user_id;
+  const user = req.session.user_id;
   const id = req.params.shortURL;
   if (urlDatabase[id].userID == user) {
     delete urlDatabase[id];
@@ -199,12 +203,12 @@ app.post("/login", (req, res) =>{
   if (!user) {
     res.send('403 user not found');
   }
-  res.cookie('user_id', user);
+  req.session['user_id'] = user;
   res.redirect('/urls');
 });
 
 app.post("/logout", (req, res) =>{
-  res.clearCookie('user_id');
+  req.session = null
   res.redirect('/urls');
 });
 
@@ -218,7 +222,7 @@ app.post('/register', (req, res) =>{
   const id = generateRandomString();
 
   users[id] = {id: id, email: newEmail, password: bcrypt.hashSync(newPassword)};
-  res.cookie('user_id', id);
+  req.session['user_id'] = id;
   console.log("welcome ", users); // check your functionality
   res.redirect('/urls');
 });
