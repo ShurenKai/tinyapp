@@ -51,8 +51,6 @@ const users = {
 };
 
 const checkUser = (email, password) => {
-  console.log(email);
-  console.log(password);
   for (let user in users) {
     if (email === users[user].email) {
       if (password === users[user].password) {
@@ -71,6 +69,16 @@ const inUse = (email) => {
   }
   return false;
 };
+
+const urlsForUser = (id) => {
+  let listOfUrls = [];
+  for(const url in urlDatabase){
+    if(urlDatabase[url].userID == id){
+      listOfUrls.push(url)
+    }
+  }
+  return listOfUrls
+}
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -103,11 +111,13 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const id = req.cookies.user_id;
+  const urlsList = urlsForUser(id)
+  console.log(urlsList)
   let email;
   if (id && users[id]) {
     email = users[id].email;
   }
-  const templateVars = { urls: urlDatabase, user_id: id, email: email };
+  const templateVars = { urls: urlDatabase, user_id: id, email: email, shown_urls: urlsList };
   res.render("urls_index", templateVars);
 });
 
@@ -166,9 +176,14 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+  const user = req.cookies.user_id
   const id = req.params.shortURL;
-  delete urlDatabase[id];
-  res.redirect('/urls');
+  if(user){
+    delete urlDatabase[id];
+    res.redirect('/urls');
+  } else if (!user) {
+    res.send('you can\'t delete this')
+  }
 });
 
 app.post("/urls/:shortURL", (req, res) => {
