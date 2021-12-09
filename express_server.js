@@ -92,7 +92,7 @@ app.get("/urls/new", (req, res) => {
   if(id && users[id]){
     email = users[id].email
   }
-  const templateVars = { user_id: id, email: email  };
+  const templateVars = { user_id: id, email: email };
   res.render("urls_new", templateVars);
 });
 
@@ -174,6 +174,7 @@ app.post("/login", (req, res) =>{
 });
 
 app.post("/logout", (req, res) =>{
+  basicPermissions = false
   res.clearCookie('user_id');
   res.redirect('/urls');
 });
