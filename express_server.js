@@ -181,7 +181,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   if(user){
     delete urlDatabase[id];
     res.redirect('/urls');
-  } else if (!user) {
+  } else {
     res.send('you can\'t delete this')
   }
 });
