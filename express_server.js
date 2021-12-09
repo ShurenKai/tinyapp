@@ -3,7 +3,7 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
-
+const bcrypt = require('bcryptjs');
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}));
@@ -41,19 +41,19 @@ const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "123123"
+    password: bcrypt.hashSync("123123")
   },
   "aJ48lW": {
     id: "aJ48lW",
     email: "user2@example.com",
-    password: "asdasd"
+    password: bcrypt.hashSync("asdasd")
   }
 };
 
 const checkUser = (email, password) => {
   for (let user in users) {
     if (email === users[user].email) {
-      if (password === users[user].password) {
+      if (bcrypt.compareSync(password, users[user].password)) {
         return user;
       }
     }
@@ -88,9 +88,10 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
+// used for testing only
+// app.get("/urls.json", (req, res) => {
+//   res.json(urlDatabase);
+// });
 
 app.get("/hello", (req, res) => {
   const templateVars = { greeting: 'Hello World!' };
@@ -112,7 +113,6 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls", (req, res) => {
   const id = req.cookies.user_id;
   const urlsList = urlsForUser(id);
-  console.log(urlsList);
   let email;
   if (id && users[id]) {
     email = users[id].email;
@@ -134,6 +134,7 @@ app.get("/urls/:shortURL", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const url = urlDatabase[shortURL];
+  console.log(urlDatabase)
   if (url) {
     res.redirect(url.longURL);
   } else {
@@ -178,7 +179,7 @@ app.post("/urls", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   const user = req.cookies.user_id;
   const id = req.params.shortURL;
-  if (user) {
+  if (urlDatabase[id].userID == user) {
     delete urlDatabase[id];
     res.redirect('/urls');
   } else {
@@ -188,7 +189,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 app.post("/urls/:shortURL", (req, res) => {
   let longerURL = req.body.longURL;
-  urlDatabase[req.params.shortURL] = longerURL;
+  urlDatabase[req.params.shortURL].longURL = longerURL;
   res.redirect('/urls');
 });
 
@@ -217,7 +218,7 @@ app.post('/register', (req, res) =>{
   }
   const id = generateRandomString();
 
-  users[id] = {id: id, email: newEmail, password: newPassword};
+  users[id] = {id: id, email: newEmail, password: bcrypt.hashSync(newPassword)};
   res.cookie('user_id', id);
   console.log("welcome ", users); // check your functionality
   res.redirect('/urls');
