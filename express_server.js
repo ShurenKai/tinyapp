@@ -3,11 +3,13 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+// const cookieSession = require('cookie-session')
 const bcrypt = require('bcryptjs');
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
+// app.use(cookieSession())
 
 
 //set engine to ejs
@@ -133,15 +135,12 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.get("/u/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  const url = urlDatabase[shortURL];
-  console.log(urlDatabase)
-  if (url) {
-    res.redirect(url.longURL);
+  const dataKeys = Object.keys(urlDatabase)
+  if (dataKeys.includes(shortURL)) {
+    res.redirect(urlDatabase[shortURL].longURL);
   } else {
     res.send('404 page not found');
   }
-  // console.log('this is my ', longURL);
-  
 });
 
 app.get("/register", (req, res) => {
