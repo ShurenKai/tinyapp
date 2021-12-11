@@ -14,7 +14,7 @@ Once that is done, you may use the command ```node express_server``` to see what
 
 #####Oh, I see that you're not logged in or registered but tried to . Well don't worry, you can click either sentence to redirect you to the relevent pages#####
 
- !["Screenshot of Unlogged in URLS page"]()
+ !["Screenshot of Unlogged in URLS page"](https://github.com/ShurenKai/tinyapp/blob/master/docs/urlsPageUnloggedInUPDATED.png?raw=true)
 
 #####Register yourself in order to access anything within this app, this screenshot only shows the change in the page, everything else is roughly the same :D#####
 
