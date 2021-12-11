@@ -78,9 +78,9 @@ app.get("/", (req, res) => {
   let email;
   if (id && users[id]) {
     email = users[id].email;
-    res.redirect("/urls")
+    res.redirect("/urls");
   } else {
-    res.redirect("/login")
+    res.redirect("/login");
   }
 });
 
@@ -133,7 +133,7 @@ app.get("/urls/:shortURL", (req, res) => {
     const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user_id: id, email: email };
     res.render("urls_show", templateVars);
   } else {
-    res.sendStatus(401)
+    res.sendStatus(401);
   }
 });
 
