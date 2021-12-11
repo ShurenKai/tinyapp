@@ -9,8 +9,8 @@
 * "method-override" version 3.0.0
 
 You can download all of these with a simple ``` npm install ``` command!
-Once that is done, you may use  ```node express_server ``` to see what's going on :3c
-(that is the express_server)
+Once that is done, you may use the command  ```node express_server ``` to see what's going on :3c
+(that is the ```express_server.js``` file)
 
 Oh, I see that you're not logged in or registered. Well, don't worry, if you click the sentence, you can see that it'll redirect you to the registration page
 

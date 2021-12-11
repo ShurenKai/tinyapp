@@ -78,9 +78,10 @@ app.get("/", (req, res) => {
   let email;
   if (id && users[id]) {
     email = users[id].email;
+    res.redirect("/urls")
+  } else {
+    res.redirect("/login")
   }
-  const templateVars = { user_id: id, email: email };
-  res.render("homepage", templateVars)
 });
 
 ///////////////////////////////
@@ -209,7 +210,7 @@ app.get("/login", (req, res) => {
   res.render('login', templateVars);
 });
 
-app.post("/login", (req, res) =>{
+app.post('/login', (req, res) =>{
   const inputEmail = req.body.email;
   const inputPassword = req.body.password;
   const user = checkUser(inputEmail, inputPassword);
@@ -220,7 +221,7 @@ app.post("/login", (req, res) =>{
   res.redirect('/urls');
 });
 
-app.post("/logout", (req, res) =>{
+app.post('/logout', (req, res) =>{
   req.session = null;
   res.redirect('/urls');
 });
