@@ -26,4 +26,14 @@ const urlsForUser = function(id, database) {
   return listOfUrls;
 };
 
-module.exports =  { getUserByEmail, inUse, urlsForUser };
+const generateRandomString = () => {
+  let options = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let length = 6;
+  let short = '';
+  for (let i = 0; i <= length; i++) {
+    short += options.charAt(Math.floor(Math.random() * options.length));
+  }
+  return short;
+};
+
+module.exports =  { getUserByEmail, inUse, urlsForUser, generateRandomString };

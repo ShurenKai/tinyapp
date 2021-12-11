@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
-const { inUse ,urlsForUser } = require('./helpers');
+const { inUse ,urlsForUser, generateRandomString } = require('./helpers');
 const methodOverride = require('method-override');
 
 
@@ -20,16 +20,6 @@ app.use(methodOverride('_method'));
 
 //set engine to ejs
 app.set("view engine", "ejs");
-
-const generateRandomString = () => {
-  let options = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let length = 6;
-  let short = '';
-  for (let i = 0; i <= length; i++) {
-    short += options.charAt(Math.floor(Math.random() * options.length));
-  }
-  return short;
-};
 
 //////////
 // Data //
@@ -59,7 +49,7 @@ const users = {
 };
 
 //////////////////////
-// Helper Functions //
+// Helper Function //
 //////////////////////
 const checkUser = (email, password) => {
   for (let user in users) {
@@ -72,22 +62,25 @@ const checkUser = (email, password) => {
   return null;
 };
 
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
-
+///////////////////
+// Port Listener //
+///////////////////
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-////////////////////////////////
-// Homepage that does nothing //
-////////////////////////////////
-app.get("/hello", (req, res) => {
-  const templateVars = { greeting: 'Hello World!' };
-  res.render("hello_world", templateVars);
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+//////////////
+// Homepage //
+//////////////
+
+app.get("/", (req, res) => {
+  const id = req.session.user_id;
+  let email;
+  if (id && users[id]) {
+    email = users[id].email;
+  }
+  const templateVars = { user_id: id, email: email };
+  res.render("homepage", templateVars)
 });
 
 ///////////////////////////////
