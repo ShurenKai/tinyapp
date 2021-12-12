@@ -172,5 +172,6 @@ redirects to /urls/:id, where :id matches the ID of the newly saved URL
 >>redirects to /urls
 
 **POST /logout**
+
 deletes cookie
 redirects to /urls
