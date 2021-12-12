@@ -1,4 +1,4 @@
-# Welcome to the tinyURL app created by Cassie/Ren Chen! #
+# Welcome to the tiny-url app created by Cassie/Ren Chen! #
 
 ## In order for all of this madness to work, I needed to download the following dependencies: ##
 * "bcryptjs" version 2.4.3,
@@ -30,10 +30,11 @@ Once that is done, you may use the command ```node express_server``` to see what
 
 ###### Thank you for registering and may your links be very small ######
 
-##### Additional information #####
-###### Behaviour requirements ######
+### Additional information ###
+#### Behaviour requirements ####
 
 **GET /**
+
 *if user is logged in:*
 >(Minor) redirect to /urls
 
@@ -41,6 +42,7 @@ Once that is done, you may use the command ```node express_server``` to see what
 >(Minor) redirect to /login
 
 **GET /URLS**
+
 *if user is logged in:*
 >returns HTML with:
 >>the site header (see Display Requirements above)
@@ -55,6 +57,7 @@ Once that is done, you may use the command ```node express_server``` to see what
 >returns HTML with a relevant error message
 
 **GET /urls/new**
+
 *if user is logged in:*
 >returns HTML with:
 >>the site header (see Display Requirements above)
@@ -66,6 +69,7 @@ Once that is done, you may use the command ```node express_server``` to see what
 >redirects to the /login page
 
 **GET /urls/:id**
+
 *if user is logged in and owns the URL for the given ID:*
 >returns HTML with:
 >>the site header (see Display Requirements above)
@@ -84,6 +88,7 @@ Once that is done, you may use the command ```node express_server``` to see what
 >returns HTML with a relevant error message
 
 **GET /u/:id**
+
 *if URL for the given ID exists:*
 >redirects to the corresponding long URL
 
@@ -91,6 +96,7 @@ Once that is done, you may use the command ```node express_server``` to see what
 >(Minor) returns HTML with a relevant error message
 
 **POST /urls**
+
 *if user is logged in:*
 >generates a short URL, saves it, and associates it with the user
 redirects to /urls/:id, where :id matches the ID of the newly saved URL
@@ -99,6 +105,7 @@ redirects to /urls/:id, where :id matches the ID of the newly saved URL
 >(Minor) returns HTML with a relevant error message
 
 **POST /urls/:id**
+
 *if user is logged in and owns the URL for the given ID:*
 >updates the URL
 >redirects to /urls
@@ -109,6 +116,7 @@ redirects to /urls/:id, where :id matches the ID of the newly saved URL
 >(Minor) returns HTML with a relevant error message
 
 **POST /urls/:id/delete**
+
 *if user is logged in and owns the URL for the given ID:*
 >deletes the URL
 >redirects to /urls
@@ -120,6 +128,7 @@ redirects to /urls/:id, where :id matches the ID of the newly saved URL
 >(Minor) returns HTML with a relevant error message
 
 **GET /login**
+
 *if user is logged in:*
 >(Minor) redirects to /urls
 
@@ -130,6 +139,7 @@ redirects to /urls/:id, where :id matches the ID of the newly saved URL
 >>submit button that makes a POST request to /login
 
 **GET /register**
+
 *if user is logged in:*
 >(Minor) redirects to /urls
 
@@ -140,6 +150,7 @@ redirects to /urls/:id, where :id matches the ID of the newly saved URL
 >>a register button that makes a POST request to /register
 
 **POST /login**
+
 *if email and password params match an existing user:*
 >sets a cookie
 >redirects to /urls
@@ -148,6 +159,7 @@ redirects to /urls/:id, where :id matches the ID of the newly saved URL
 >returns HTML with a relevant error message
 
 **POST /register**
+
 *if email or password are empty:*
 >returns HTML with a relevant error message
 
