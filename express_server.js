@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 const { inUse ,urlsForUser, generateRandomString, getUserByEmail } = require('./helpers');
 const methodOverride = require('method-override');
+const e = require("express");
 
 
 // Middleware
@@ -188,17 +189,19 @@ app.post('/register', (req, res) =>{
   const newPassword = req.body.password;
   if (inUse(newEmail, users)) {
     const check = getUserByEmail(newEmail, users)
+    console.log("Goodbye")
     if(users[check].password === bcrypt.hashSync(newPassword, salt)){
       req.session['user_id'] = check
       res.redirect('/urls')
     } else {
-      res.send("This Email is already in use!").status(400);
+      console.log("Goodbye11")
+      res.send("This Email is already in use! Error 400").status(400);
       res.end;
     }
   }
-  const newId = generateRandomString();
+  const id = generateRandomString();
 
-  users[id] = {id: newId, email: newEmail, password: bcrypt.hashSync(newPassword, salt)};
+  users[id] = {id: id, email: newEmail, password: bcrypt.hashSync(newPassword, salt)};
   req.session['user_id'] = id;
   res.redirect('/urls');
 });
