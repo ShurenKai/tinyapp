@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
-const { inUse ,urlsForUser, generateRandomString } = require('./helpers');
+const { inUse ,urlsForUser, generateRandomString, getUserByEmail } = require('./helpers');
 const methodOverride = require('method-override');
 
 
@@ -187,12 +187,18 @@ app.post('/register', (req, res) =>{
   const newEmail = req.body.email;
   const newPassword = req.body.password;
   if (inUse(newEmail, users)) {
-    res.sendStatus(400);
-    res.end;
+    const check = getUserByEmail(newEmail, users)
+    if(users[check].password === bcrypt.hashSync(newPassword, salt)){
+      req.session['user_id'] = check
+      res.redirect('/urls')
+    } else {
+      res.send("This Email is already in use!").status(400);
+      res.end;
+    }
   }
-  const id = generateRandomString();
+  const newId = generateRandomString();
 
-  users[id] = {id: id, email: newEmail, password: bcrypt.hashSync(newPassword, salt)};
+  users[id] = {id: newId, email: newEmail, password: bcrypt.hashSync(newPassword, salt)};
   req.session['user_id'] = id;
   res.redirect('/urls');
 });
@@ -225,7 +231,6 @@ app.post('/logout', (req, res) =>{
   req.session = null;
   res.redirect('/urls');
 });
-
 
 /////////////////////
 // Unrelated notes //
